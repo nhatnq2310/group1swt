@@ -1,73 +1,62 @@
-Nguyễn Quang Nhật - SE160985
-# Spring Boot REST API - Tổng Quan Dự Án
+# Ứng dụng Todo List với React và Material-UI (MUI)
 
-## 1. Giới Thiệu
-Dự án này là một **Spring Boot REST API** cung cấp chức năng CRUD để quản lý mục (items). Nó tuân theo kiến trúc phân lớp gồm **Controller, Service và Repository**. API được kiểm thử bằng **JUnit và Mockito**, đảm bảo **độ phủ kiểm thử 80-90%**.
+Ứng dụng Todo List đơn giản này được xây dựng bằng React và Material-UI (MUI). Nó cho phép người dùng thêm, chỉnh sửa, đánh dấu hoàn thành và xóa các công việc.
 
-## 2. Cấu Trúc Dự Án
-```
-com.example.demo
-│── CrudApplication.java  (Lớp chính - Main class)
-│── controller
-│   ├── ItemController.java  (Xử lý các yêu cầu HTTP)
-│── entity
-│   ├── Item.java  (Định nghĩa thực thể Item)
-│── repository
-│   ├── ItemRepository.java  (Xử lý truy vấn cơ sở dữ liệu)
-│── service
-│   ├── ItemService.java  (Xử lý logic nghiệp vụ CRUD)
-```
+## Tính năng
 
-### **Thư Mục Kiểm Thử (src/test/java/com/example/demo)**
-```
-com.example.demo
-│── controller
-│   ├── ItemControllerTest.java  (Kiểm thử API endpoint)
-│── service
-│   ├── ItemServiceTest.java  (Kiểm thử logic nghiệp vụ)
-│── repository
-│   ├── ItemRepositoryTest.java  (Kiểm thử thao tác cơ sở dữ liệu)
-```
+* **Thêm công việc:** Người dùng có thể thêm công việc mới vào danh sách.
+* **Chỉnh sửa công việc:** Người dùng có thể chỉnh sửa nội dung của công việc hiện có.
+* **Đánh dấu hoàn thành:** Người dùng có thể đánh dấu công việc là đã hoàn thành.
+* **Xóa công việc:** Người dùng có thể xóa công việc khỏi danh sách.
 
-## 3. Giải Thích Từng Phần
-### **1. Lớp Thực Thể (`Item.java`)**
-- Đại diện cho đối tượng `Item` với các thuộc tính `id` và `name`.
-- Sử dụng `@Entity` để ánh xạ với cơ sở dữ liệu.
+## Cấu trúc thư mục
 
-### **2. Lớp Repository (`ItemRepository.java`)**
-- Kế thừa `JpaRepository<Item, Long>` để có sẵn các phương thức CRUD.
-- Xử lý tương tác trực tiếp với cơ sở dữ liệu.
+src/
+├── components/
+│   ├── Todo.js         # Component Todo riêng lẻ
+│   ├── TodoForm.js     # Component form thêm/chỉnh sửa Todo
+│   └── TodoList.js     # Component danh sách Todo
+├── App.js             # Component App chính
+└── index.js           # Điểm vào của ứng dụng
 
-### **3. Lớp Service (`ItemService.java`)**
-- Chứa logic nghiệp vụ của CRUD.
-- Sử dụng `@Service` để làm trung gian giữa Controller và Repository.
-- Xử lý ngoại lệ và kiểm tra đầu vào.
 
-### **4. Lớp Controller (`ItemController.java`)**
-- Định nghĩa các API REST (`GET`, `POST`, `PUT`, `DELETE`).
-- Sử dụng `@RestController` để xử lý yêu cầu HTTP.
-- Trả về mã trạng thái phù hợp (ví dụ: 200 OK, 404 Not Found).
+## Giải thích code chính
 
-### **5. Kiểm Thử (`JUnit & Mockito`)**
-- **Kiểm thử Service (`ItemServiceTest.java`)**:
-  - Dùng Mockito để giả lập `ItemRepository`.
-  - Kiểm tra logic nghiệp vụ và tương tác với repository.
-- **Kiểm thử Controller (`ItemControllerTest.java`)**:
-  - Dùng `MockMvc` để kiểm thử API REST.
-  - Xác nhận mã trạng thái HTTP và phản hồi JSON.
-- **Kiểm thử Repository (`ItemRepositoryTest.java`)**:
-  - Kiểm thử thao tác cơ sở dữ liệu với H2 (DB trong bộ nhớ để kiểm thử).
+* **`App.js`**:
+    * Quản lý trạng thái của danh sách công việc.
+    * Cung cấp các hàm để thêm, chỉnh sửa, hoàn thành và xóa công việc.
+    * Render component `TodoList`.
+* **`TodoList.js`**:
+    * Hiển thị danh sách các công việc.
+    * Sử dụng component `Todo` để render từng công việc.
+* **`Todo.js`**:
+    * Hiển thị một công việc riêng lẻ.
+    * Cho phép chỉnh sửa và xóa công việc.
+* **`TodoForm.js`**:
+    * Cho phép người dùng thêm hoặc chỉnh sửa một công việc.
 
-## 4. Cách Đạt 80-90% Độ Phủ Kiểm Thử
-Để đảm bảo độ phủ cao:
-✅ **Giả lập phụ thuộc** trong kiểm thử service và controller.
-✅ **Bao gồm các trường hợp thành công và thất bại** (ví dụ: không tìm thấy item).
-✅ **Dùng `@DataJpaTest` cho kiểm thử repository** để xác nhận hoạt động với DB.
+## Cài đặt và chạy ứng dụng
 
-## 5. Các Best Practices Được Áp Dụng
-🔹 **Kiến trúc phân lớp** (Controller → Service → Repository).  
-🔹 **Dùng DTO để xử lý request tốt hơn** (nếu có).  
-🔹 **Xử lý ngoại lệ hợp lý** (`@ExceptionHandler`).  
-🔹 **Kiểm thử đơn vị & Độ phủ kiểm thử cao** với JUnit & Mockito.  
-🔹 **Spring Boot Annotations** (`@RestController`, `@Service`, `@Repository`).  
+1.  Cài đặt các dependencies:
 
+    ```bash
+    npm install
+    ```
+
+2.  Chạy ứng dụng:
+
+    ```bash
+    npm start
+    ```
+
+## Dependencies
+
+* React
+* Material-UI (MUI)
+
+## Cách sử dụng
+
+* Nhập công việc mới vào ô input và nhấn Enter hoặc nút "Add".
+* Nhấp vào công việc để đánh dấu là hoàn thành.
+* Nhấn vào biểu tượng chỉnh sửa để chỉnh sửa công việc.
+* Nhấn vào biểu tượng thùng rác để xóa công việc
